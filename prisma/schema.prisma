@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = process.env.DATABASE_URL
+}
+
+model User{
+  id           String           @id @default(uuid())
+  name   String
+  age    Int
+  class        String           
+  subject     String
+  attendance      String
+ user_credential_Id  String?           
+  credentials         user_credentials?  @relation("UserToCredentials", fields: [user_credential_Id], references: [id])
+}
+
+model user_credentials{
+  id           String           @id @default(uuid())
+  email        String           @unique
+  password     String
+  deleted      Boolean
+  token        String           @default("null")
+  role_id  Int
+  users       User[]   @relation("UserToCredentials") 
+}
